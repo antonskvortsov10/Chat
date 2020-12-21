@@ -12,14 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ChatClient.ServiceChat;
 
 namespace ChatClient
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IServiceChatCallback
     {
+        ServiceChatClient client;
+        int id;
         bool isConnected = false;
 
         public MainWindow()
@@ -27,10 +30,17 @@ namespace ChatClient
             InitializeComponent();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            client = new ServiceChatClient(new System.ServiceModel.InstanceContext(this));
+        }
+
         void ConnectUser()
         {
             if (!isConnected)
             {
+                id = client.Connect(tbUserName.Text);
+
                 tbUserName.IsEnabled = false;
                 bConn.Content = "Disconnect";
                 isConnected = true;
@@ -41,6 +51,8 @@ namespace ChatClient
         {
             if (isConnected)
             {
+                client.Disconnect(id);
+
                 tbUserName.IsEnabled = true;
                 bConn.Content = "Connect";
                 isConnected = false;
@@ -56,6 +68,24 @@ namespace ChatClient
             else
             {
                 ConnectUser();
+            }
+        }
+
+        public void MessageCallback(string message)
+        {
+            lbChat.Items.Add(message);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DisconnectUser();
+        }
+
+        private void tbMessage_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                client.SendMessage(tbMessage.Text, id);
             }
         }
     }
