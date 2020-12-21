@@ -11,18 +11,18 @@ namespace Chat
     public interface IServiceChat
     {
         [OperationContract]
-        int Connect();
+        int Connect(string name);
 
         [OperationContract]
         void Disconnect(int id);
 
         [OperationContract(IsOneWay = true)]
-        void SendMessage(string message);
+        void SendMessage(string message, int id);
     }
 
     public interface IServerChatCallback
     {
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void MessageCallback(string message);
     }
 }

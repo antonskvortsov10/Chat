@@ -13,19 +13,47 @@ namespace Chat
         List<ServerUser> users = new List<ServerUser>();
         int nextId = 1;
 
-        public int Connect()
+        public int Connect(string name)
         {
-            throw new NotImplementedException();
+            ServerUser user = new ServerUser()
+            {
+                Id = nextId,
+                Name = name,
+                operationContext = OperationContext.Current
+            };
+            users.Add(user);
+            nextId++;
+
+            SendMessage(user.Name + "присоединился к чату!", 0);
+
+            return user.Id;
         }
 
         public void Disconnect(int id)
         {
-            throw new NotImplementedException();
+            var user = users.FirstOrDefault(u => u.Id == id);
+            if (user != null)
+            {
+                users.Remove(user);
+                SendMessage(user.Name + "покинул чат!", 0);
+            }
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(string message, int id)
         {
-            throw new NotImplementedException();
+            foreach (var item in users)
+            {
+                string answer = DateTime.Now.ToShortTimeString();
+
+                var user = users.FirstOrDefault(u => u.Id == id);
+                if (user != null)
+                {
+                    answer += ": " + user.Name + " ";
+                }
+                answer += message;
+
+                item.operationContext.GetCallbackChannel<IServerChatCallback>().MessageCallback(answer);
+            }
         }
     }
 }
