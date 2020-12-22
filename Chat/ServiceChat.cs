@@ -24,7 +24,7 @@ namespace Chat
             users.Add(user);
             nextId++;
 
-            SendMessage(user.Name + "присоединился к чату!", 0);
+            SendMessage(": " + user.Name + "присоединился к чату!", 0);
 
             return user.Id;
         }
@@ -35,7 +35,7 @@ namespace Chat
             if (user != null)
             {
                 users.Remove(user);
-                SendMessage(user.Name + "покинул чат!", 0);
+                SendMessage(": " + user.Name + "покинул чат!", 0);
             }
         }
 
