@@ -32,13 +32,14 @@ namespace ChatClient
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            client = new ServiceChatClient(new System.ServiceModel.InstanceContext(this));
+            
         }
 
         void ConnectUser()
         {
             if (!isConnected)
             {
+                client = new ServiceChatClient(new System.ServiceModel.InstanceContext(this));
                 id = client.Connect(tbUserName.Text);
 
                 tbUserName.IsEnabled = false;
@@ -52,6 +53,7 @@ namespace ChatClient
             if (isConnected)
             {
                 client.Disconnect(id);
+                client = null;
 
                 tbUserName.IsEnabled = true;
                 bConn.Content = "Connect";
@@ -85,7 +87,11 @@ namespace ChatClient
         {
             if (e.Key == Key.Enter)
             {
-                client.SendMessage(tbMessage.Text, id);
+                if (client != null)
+                {
+                    client.SendMessage(tbMessage.Text, id);
+                    tbMessage.Text = string.Empty;
+                }
             }
         }
     }

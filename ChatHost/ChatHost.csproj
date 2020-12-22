@@ -54,9 +54,9 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chat\WcfChat.csproj">
+    <ProjectReference Include="..\Chat\Chat.csproj">
       <Project>{ef057c18-6117-47af-b041-0e0278a33b09}</Project>
-      <Name>WcfChat</Name>
+      <Name>Chat</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
